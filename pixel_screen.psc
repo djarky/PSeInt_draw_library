@@ -1,5 +1,5 @@
 Proceso pixel_screen
-	Definir Screen Como Caracter; Dimension Screen[33,33];
+	Definir Screen Como Caracter; Dimension Screen[34,82];
     Definir cursor_x, cursor_y Como Entero;
     Definir pixel_high, pixel_low Como Caracter;
 	
@@ -24,9 +24,10 @@ Proceso pixel_screen
 	
 	Definir mensaje Como Cadena;
 	mensaje <- "HOLA MUNDO";
-	imprimir_texto_con_sprites(Screen, mensaje, 1, 1);
+	print_sprite(Screen, mensaje, 1, 1);
 	
 	draw_screen(Screen);
+	animar_scroll(Screen);
 	
 	Esperar Tecla;
 
@@ -48,7 +49,7 @@ Proceso pixel_screen
 	
 
 	
-	dibujar_sprite(Screen, carita, 24, 28);
+	draw_sprite(Screen, carita, 24, 28);
 
 	
 	print_text_type_vertical(Screen, "Hola Mundo con estilo", cursor_x, cursor_y);
@@ -57,7 +58,7 @@ Proceso pixel_screen
 	
 	
     draw_screen(Screen);
-	animar_scroll(Screen);
+	
 	
 
 	
@@ -82,56 +83,56 @@ SubProceso animar_scroll(Screen Por Referencia)
     Para i <- 1 Hasta 10
         scroll_screen(Screen, 1, 0);
         draw_screen(Screen);
-        delay(100);
+        //delay(100);
     FinPara
 	
     // Desplazar hacia abajo
     Para i <- 1 Hasta 10
         scroll_screen(Screen, 0, 1);
         draw_screen(Screen);
-        delay(100);
+        //delay(100);
     FinPara
 	
     // Desplazar hacia la izquierda
     Para i <- 1 Hasta 10
         scroll_screen(Screen, -1, 0);
         draw_screen(Screen);
-        delay(100);
+        //delay(100);
     FinPara
 	
     // Desplazar hacia arriba
     Para i <- 1 Hasta 10
         scroll_screen(Screen, 0, -1);
         draw_screen(Screen);
-        delay(100);
+        //delay(100);
     FinPara
 	
     // Diagonal ?
     Para i <- 1 Hasta 10
         scroll_screen(Screen, 1, 1);
         draw_screen(Screen);
-        delay(100);
+        //delay(100);
     FinPara
 	
     // Diagonal ?
     Para i <- 1 Hasta 10
         scroll_screen(Screen, -1, 1);
         draw_screen(Screen);
-        delay(100);
+        //delay(100);
     FinPara
 	
     // Diagonal ?
     Para i <- 1 Hasta 10
         scroll_screen(Screen, -1, -1);
         draw_screen(Screen);
-        delay(100);
+        //delay(100);
     FinPara
 	
     // Diagonal ?
     Para i <- 1 Hasta 10
         scroll_screen(Screen, 1, -1);
         draw_screen(Screen);
-        delay(100);
+        //delay(100);
     FinPara
 FinSubProceso
 
@@ -142,21 +143,22 @@ FinSubProceso
 
 //LIBRARY FUCTIONS
 
-SubProceso init_screen ( Screen Por Referencia , vacio Por Referencia )
+//inicia la pantalla
+SubProceso init_screen ( Screen Por Referencia , vacio)
     Definir i, j Como Entero;
     Para i <- 1 Hasta 32
-        Para j <- 1 Hasta 32
+        Para j <- 1 Hasta 80
             Screen[i,j] <- vacio;
         FinPara
     FinPara
 FinSubProceso
 
-
+//actualiza la pantalla
 SubProceso draw_screen( Screen Por Referencia )
 	Limpiar Pantalla;
     Definir i, j Como Entero;
     Para i <- 1 Hasta 32
-        Para j <- 1 Hasta 32
+        Para j <- 1 Hasta 76
             Escribir Sin Saltar Screen[i,j];
 			Escribir Sin Saltar " ";
         FinPara
@@ -166,39 +168,39 @@ FinSubProceso
 
 
 
-// Imprime texto en la pantalla desde la posición del cursor, modificando el cursor (por referencia)
-SubProceso   print_text(Screen Por Referencia , text , SCR_X Por Referencia ,  SCR_Y Por Referencia )
+// Imprime texto en la pantalla desde la posición del cursor
+SubProceso  print_text(Screen Por Referencia , text , cursor_x  ,  cursor_y  )
     Definir i, len Como Entero;
     Definir c Como Caracter;
     len <- Longitud(text);
 	
     Para i <- 0 Hasta len -1
         c <- SubCadena(text, i, i);
-        Si SCR_X >= 1 Y SCR_X <= 32 Y SCR_Y >= 1 Y SCR_Y <= 32 Entonces
-            Screen[SCR_Y,SCR_X] <- c;
+        Si cursor_x >= 1 Y cursor_x <= 80 Y cursor_y >= 1 Y cursor_y <= 32 Entonces
+            Screen[cursor_y,cursor_x] <- c;
         FinSi
-        SCR_X <- SCR_X + 1;
-        Si SCR_X > 32 Entonces
-            SCR_X <- 1;
-            SCR_Y <- SCR_Y + 1;
+        cursor_x <- cursor_x + 1;
+        Si cursor_x > 32 Entonces
+            cursor_x <- 1;
+            cursor_y <- cursor_y + 1;
         FinSi
     FinPara
 FinSubProceso
 
-SubProceso print_text_vertical(Screen Por Referencia, text, SCR_X Por Referencia, SCR_Y Por Referencia)
+SubProceso print_text_vertical(Screen Por Referencia, text, cursor_x , cursor_y )
     Definir i, len Como Entero;
     Definir c Como Caracter;
     len <- Longitud(text);
     
     Para i <- 0 Hasta len -1
         c <- SubCadena(text, i, i);
-        Si SCR_X >= 1 Y SCR_X <= 32 Y SCR_Y >= 1 Y SCR_Y <= 32 Entonces
-            Screen[SCR_Y, SCR_X] <- c;
+        Si cursor_x >= 1 Y cursor_x <= 80 Y cursor_y >= 1 Y cursor_y <= 32 Entonces
+            Screen[cursor_y, cursor_x] <- c;
         FinSi
-        SCR_Y <- SCR_Y + 1;
-        Si SCR_Y > 32 Entonces
-            SCR_Y <- 1;
-            SCR_X <- SCR_X + 1;
+        cursor_y <- cursor_y + 1;
+        Si cursor_y > 32 Entonces
+            cursor_y <- 1;
+            cursor_x <- cursor_x + 1;
         FinSi
     FinPara
 FinSubProceso
@@ -208,7 +210,7 @@ SubProceso draw_rect(Screen Por Referencia, pos_x, pos_y, ancho, alto, relleno, 
 	
     Para fila <- pos_y Hasta pos_y + alto - 1
         Para columna <- pos_x Hasta pos_x + ancho - 1
-            Si columna >= 1 Y columna <= 32 Y fila >= 1 Y fila <= 32 Entonces
+            Si columna >= 1 Y columna <= 80 Y fila >= 1 Y fila <= 32 Entonces
                 Si relleno = "Verdadero" Entonces
                     Screen[fila, columna] <- pixel;
                 Sino
@@ -226,7 +228,7 @@ SubProceso delay(ms)
     Esperar ms Milisegundos;
 FinSubProceso
 
-SubProceso print_text_type(Screen Por Referencia, texto_a_imprimir, cursor_col Por Referencia, cursor_fila Por Referencia)
+SubProceso print_text_type(Screen Por Referencia, texto_a_imprimir, cursor_x , cursor_y )
     Definir indice, longitud_texto Como Entero;
     Definir letra_actual Como Caracter;
 	
@@ -235,14 +237,14 @@ SubProceso print_text_type(Screen Por Referencia, texto_a_imprimir, cursor_col P
     Para indice <- 0 Hasta longitud_texto - 1
         letra_actual <- SubCadena(texto_a_imprimir, indice, indice);
 		
-        Si cursor_col >= 1 Y cursor_col <= 32 Y cursor_fila >= 1 Y cursor_fila <= 32 Entonces
-            Screen[cursor_fila, cursor_col] <- letra_actual;
+        Si cursor_x >= 1 Y cursor_x <= 80 Y cursor_y >= 1 Y cursor_y <= 32 Entonces
+            Screen[cursor_y, cursor_x] <- letra_actual;
         FinSi
 		
-        cursor_col <- cursor_col + 1;
-        Si cursor_col > 32 Entonces
-            cursor_col <- 1;
-            cursor_fila <- cursor_fila + 1;
+        cursor_x <- cursor_x + 1;
+        Si cursor_x > 32 Entonces
+            cursor_x <- 1;
+            cursor_y <- cursor_y + 1;
         FinSi
 		
         draw_screen(Screen);
@@ -250,7 +252,7 @@ SubProceso print_text_type(Screen Por Referencia, texto_a_imprimir, cursor_col P
     FinPara
 FinSubProceso
 
-SubProceso print_text_type_vertical(Screen Por Referencia, texto_a_imprimir, cursor_col Por Referencia, cursor_fila Por Referencia)
+SubProceso print_text_type_vertical(Screen Por Referencia, texto_a_imprimir, cursor_x , cursor_y )
     Definir indice, longitud_texto Como Entero;
     Definir letra_actual Como Caracter;
 	
@@ -259,14 +261,14 @@ SubProceso print_text_type_vertical(Screen Por Referencia, texto_a_imprimir, cur
     Para indice <- 0 Hasta longitud_texto - 1
         letra_actual <- SubCadena(texto_a_imprimir, indice, indice);
 		
-        Si cursor_col >= 1 Y cursor_col <= 32 Y cursor_fila >= 1 Y cursor_fila <= 32 Entonces
-            Screen[cursor_fila, cursor_col] <- letra_actual;
+        Si cursor_x >= 1 Y cursor_x <= 80 Y cursor_y >= 1 Y cursor_y <= 32 Entonces
+            Screen[cursor_y, cursor_x] <- letra_actual;
         FinSi
 		
-        cursor_fila <- cursor_fila + 1;
-        Si cursor_fila > 32 Entonces
-            cursor_fila <- 1;
-            cursor_col <- cursor_col + 1;
+        cursor_y <- cursor_y + 1;
+        Si cursor_y > 32 Entonces
+            cursor_y <- 1;
+            cursor_x <- cursor_x + 1;
         FinSi
 		
         draw_screen(Screen);
@@ -280,7 +282,7 @@ SubProceso draw_circle(Screen Por Referencia, pos_col, pos_fila, radio, relleno,
 	
     Para fila_actual <- pos_fila - radio Hasta pos_fila + radio
         Para col_actual <- pos_col - radio Hasta pos_col + radio
-            Si col_actual >= 1 Y col_actual <= 32 Y fila_actual >= 1 Y fila_actual <= 32 Entonces
+            Si col_actual >= 1 Y col_actual <= 80 Y fila_actual >= 1 Y fila_actual <= 32 Entonces
                 distancia_cuadrada <- (col_actual - pos_col)^2 + (fila_actual - pos_fila)^2;
 				
                 Si relleno = "Verdadero" Entonces
@@ -322,7 +324,7 @@ SubProceso draw_line(Screen Por Referencia, pos_x1, pos_y1, pos_x2, pos_y2, pixe
     err <- dx - dy;
 	
     Repetir
-        Si col >= 1 Y col <= 32 Y fila >= 1 Y fila <= 32 Entonces
+        Si col >= 1 Y col <= 80 Y fila >= 1 Y fila <= 32 Entonces
             Screen[fila, col] <- pixel;
         FinSi
 		
@@ -349,13 +351,13 @@ FinSubProceso
 
 SubProceso scroll_screen(Screen Por Referencia, x_des, y_des)
     Definir i, j, nueva_fila, nueva_col Como Entero;
-    Definir nueva_screen Como Caracter; Dimension nueva_screen[33,33];
+    Definir nueva_screen Como Caracter; Dimension nueva_screen[33,81];
 	
     Para i <- 1 Hasta 32
-        Para j <- 1 Hasta 32
+        Para j <- 1 Hasta 80
             // Calcula nueva posición con efecto toroide
             nueva_fila <- ((i - 1 + y_des + 32) Mod 32) + 1;
-            nueva_col <- ((j - 1 + x_des + 32) Mod 32) + 1;
+            nueva_col <- ((j - 1 + x_des + 80) Mod 80) + 1;
 			
             nueva_screen[nueva_fila, nueva_col] <- Screen[i, j];
         FinPara
@@ -363,41 +365,59 @@ SubProceso scroll_screen(Screen Por Referencia, x_des, y_des)
 	
     // Copiar el resultado de vuelta a la pantalla original
     Para i <- 1 Hasta 32
-        Para j <- 1 Hasta 32
+        Para j <- 1 Hasta 80
             Screen[i,j] <- nueva_screen[i,j];
         FinPara
     FinPara
 FinSubProceso
 
-SubProceso dibujar_sprite(Screen Por Referencia, sprite, pos_x, pos_y)
-    Definir i, j, pantalla_x, pantalla_y Como Entero;
+SubProceso draw_sprite(Screen Por Referencia, sprite, pos_x, pos_y)
+    Definir i, j, col, fila Como Entero;
 	
     Para i <- 1 Hasta 8
         Para j <- 1 Hasta 8
-            pantalla_y <- pos_y + i - 1;
-            pantalla_x <- pos_x + j - 1;
+            fila <- pos_y + i - 1;
+            col <- pos_x + j - 1;
 			
-            Si pantalla_x >= 1 Y pantalla_x <= 32 Y pantalla_y >= 1 Y pantalla_y <= 32 Entonces
+            Si col >= 1 Y col <= 80 Y fila >= 1 Y fila <= 32 Entonces
                 Si SubCadena(sprite[i,j], 0, 0) <> " " Entonces
-                    Screen[pantalla_y, pantalla_x] <- sprite[i,j];
+                    Screen[fila, col] <- sprite[i,j];
                 FinSi
             FinSi
         FinPara
     FinPara
 FinSubProceso
 
-SubProceso dibujar_sprite_str(Screen Por Referencia, sprite_str, pos_x, pos_y)
-    Definir i, j, pantalla_x, pantalla_y, indice Como Entero;
+SubProceso draw_sprite_str(Screen Por Referencia, sprite_str, pos_x, pos_y)
+    Definir i, j, col, fila, indice Como Entero;
 	
     Para i <- 0 Hasta 7;
         Para j <- 0 Hasta 7;
-            pantalla_y <- pos_y + i;
-            pantalla_x <- pos_x + j;
+            fila <- pos_y + i;
+            col <- pos_x + j;
             indice <- i * 8 + j + 1;  // Ajuste porque SubCadena empieza en 1
 			
-            Si pantalla_x >= 1 Y pantalla_x <= 32 Y pantalla_y >= 1 Y pantalla_y <= 32 Entonces
+            Si col >= 1 Y col <= 80 Y fila >= 1 Y fila <= 32 Entonces
                 Si SubCadena(sprite_str, indice, indice) <> " " Entonces
-                    Screen[pantalla_y, pantalla_x] <- SubCadena(sprite_str, indice, indice);
+                    Screen[fila, col] <- SubCadena(sprite_str, indice, indice);
+                FinSi;
+            FinSi;
+        FinPara;
+    FinPara;
+FinSubProceso
+
+SubProceso draw_sprite_big(Screen Por Referencia, sprite_str, pos_x, pos_y , ancho, alto)
+    Definir i, j, col, fila, indice Como Entero;
+	
+    Para i <- 0 Hasta alto;
+        Para j <- 0 Hasta ancho;
+            fila <- pos_y + i;
+            col <- pos_x + j;
+            indice <- i * ancho + j + 1;  
+			
+            Si col >= 1 Y col <= 80 Y fila >= 1 Y fila <= 32 Entonces
+                Si SubCadena(sprite_str, indice, indice) <> " " Entonces
+                    Screen[fila, col] <- SubCadena(sprite_str, indice, indice);
                 FinSi;
             FinSi;
         FinPara;
@@ -405,7 +425,7 @@ SubProceso dibujar_sprite_str(Screen Por Referencia, sprite_str, pos_x, pos_y)
 FinSubProceso
 
 
-SubProceso copiar_sprite(origen, destino Por Referencia)
+SubProceso copy_sprite(origen, destino Por Referencia)
     Definir i, j Como Entero;
     Para i <- 1 Hasta 9
         Para j <- 1 Hasta 9
@@ -416,7 +436,7 @@ FinSubProceso
 
 
 
-SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
+SubProceso get_sprite(letra, sprite_resultado Por Referencia)
     Definir sprite_A, sprite_B, sprite_C, sprite_D, sprite_E, sprite_F, sprite_G, sprite_H Como Cadena;
     Definir sprite_I, sprite_J, sprite_K, sprite_L, sprite_M, sprite_N, sprite_O, sprite_P, sprite_Q, sprite_R Como Cadena;
     Definir sprite_S, sprite_T, sprite_U, sprite_V, sprite_W, sprite_X, sprite_Y, sprite_Z Como Cadena;
@@ -424,7 +444,7 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
     Definir sprite_plus, sprite_minus, sprite_slash, sprite_comma, sprite_dot, sprite_colon, sprite_question, sprite_exclam, sprite_heart Como Cadena;
     Definir sprite_DEF Como Cadena;
 	
-    // Ejemplo con solo algunas letras y símbolos por brevedad
+  
     sprite_A <- "";
     sprite_A <- Concatenar(sprite_A, "   ###  ");
     sprite_A <- Concatenar(sprite_A, "  #   # ");
@@ -434,7 +454,7 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
     sprite_A <- Concatenar(sprite_A, " #     #");
     sprite_A <- Concatenar(sprite_A, " #     #");
     sprite_A <- Concatenar(sprite_A, "        ");
-
+	
 	
     sprite_B <- "";
     sprite_B <- Concatenar(sprite_B, " ###### ");
@@ -445,7 +465,7 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
     sprite_B <- Concatenar(sprite_B, " #     #");
     sprite_B <- Concatenar(sprite_B, " ###### ");
     sprite_B <- Concatenar(sprite_B, "        ");
-
+	
 	
     sprite_C <- "";
     sprite_C <- Concatenar(sprite_C, "  ##### ");
@@ -456,9 +476,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
     sprite_C <- Concatenar(sprite_C, " #     #");
     sprite_C <- Concatenar(sprite_C, "  ##### ");
     sprite_C <- Concatenar(sprite_C, "        ");
-
 	
-	// Sprite D
+	
+
 	sprite_D <- "";
 	sprite_D <- Concatenar(sprite_D, " #####  ");
 	sprite_D <- Concatenar(sprite_D, " #    # ");
@@ -468,9 +488,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_D <- Concatenar(sprite_D, " #    # ");
 	sprite_D <- Concatenar(sprite_D, " #####  ");
 	sprite_D <- Concatenar(sprite_D, "        ");
-
 	
-	// Sprite E
+	
+
 	sprite_E <- "";
 	sprite_E <- Concatenar(sprite_E, " #######");
 	sprite_E <- Concatenar(sprite_E, " #      ");
@@ -480,9 +500,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_E <- Concatenar(sprite_E, " #      ");
 	sprite_E <- Concatenar(sprite_E, " #######");
 	sprite_E <- Concatenar(sprite_E, "        ");
-
 	
-	// Sprite F
+	
+
 	sprite_F <- "";
 	sprite_F <- Concatenar(sprite_F, " #######");
 	sprite_F <- Concatenar(sprite_F, " #      ");
@@ -492,9 +512,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_F <- Concatenar(sprite_F, " #      ");
 	sprite_F <- Concatenar(sprite_F, " #      ");
 	sprite_F <- Concatenar(sprite_F, "        ");
-
 	
-	// Sprite G
+	
+
 	sprite_G <- "";
 	sprite_G <- Concatenar(sprite_G, "  ##### ");
 	sprite_G <- Concatenar(sprite_G, " #     #");
@@ -504,9 +524,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_G <- Concatenar(sprite_G, " #     #");
 	sprite_G <- Concatenar(sprite_G, "  ##### ");
 	sprite_G <- Concatenar(sprite_G, "        ");
-
 	
-	// Sprite H
+	
+
 	sprite_H <- "";
 	sprite_H <- Concatenar(sprite_H, " #     #");
 	sprite_H <- Concatenar(sprite_H, " #     #");
@@ -516,9 +536,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_H <- Concatenar(sprite_H, " #     #");
 	sprite_H <- Concatenar(sprite_H, " #     #");
 	sprite_H <- Concatenar(sprite_H, "        ");
-
 	
-	// Sprite I
+	
+
 	sprite_I <- "";
 	sprite_I <- Concatenar(sprite_I, " #######");
 	sprite_I <- Concatenar(sprite_I, "    #   ");
@@ -528,9 +548,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_I <- Concatenar(sprite_I, "    #   ");
 	sprite_I <- Concatenar(sprite_I, " #######");
 	sprite_I <- Concatenar(sprite_I, "        ");
-
 	
-	// Sprite J
+	
+
 	sprite_J <- "";
 	sprite_J <- Concatenar(sprite_J, "       #");
 	sprite_J <- Concatenar(sprite_J, "       #");
@@ -540,9 +560,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_J <- Concatenar(sprite_J, " #     #");
 	sprite_J <- Concatenar(sprite_J, "  ##### ");
 	sprite_J <- Concatenar(sprite_J, "        ");
-
 	
-	// Sprite K
+	
+
 	sprite_K <- "";
 	sprite_K <- Concatenar(sprite_K, " #    # ");
 	sprite_K <- Concatenar(sprite_K, " #   #  ");
@@ -552,9 +572,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_K <- Concatenar(sprite_K, " #   #  ");
 	sprite_K <- Concatenar(sprite_K, " #    # ");
 	sprite_K <- Concatenar(sprite_K, "        ");
-
 	
-	// Sprite L
+	
+
 	sprite_L <- "";
 	sprite_L <- Concatenar(sprite_L, " #      ");
 	sprite_L <- Concatenar(sprite_L, " #      ");
@@ -564,9 +584,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_L <- Concatenar(sprite_L, " #      ");
 	sprite_L <- Concatenar(sprite_L, " #######");
 	sprite_L <- Concatenar(sprite_L, "        ");
-
 	
-	// Sprite M
+	
+
 	sprite_M <- "";
 	sprite_M <- Concatenar(sprite_M, " #     #");
 	sprite_M <- Concatenar(sprite_M, " ##   ##");
@@ -576,9 +596,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_M <- Concatenar(sprite_M, " #     #");
 	sprite_M <- Concatenar(sprite_M, " #     #");
 	sprite_M <- Concatenar(sprite_M, "        ");
-
 	
-	// Sprite N
+	
+
 	sprite_N <- "";
 	sprite_N <- Concatenar(sprite_N, " #     #");
 	sprite_N <- Concatenar(sprite_N, " ##    #");
@@ -588,9 +608,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_N <- Concatenar(sprite_N, " #    ##");
 	sprite_N <- Concatenar(sprite_N, " #     #");
 	sprite_N <- Concatenar(sprite_N, "        ");
-
 	
-	// Sprite O
+	
+
 	sprite_O <- "";
 	sprite_O <- Concatenar(sprite_O, "  ##### ");
 	sprite_O <- Concatenar(sprite_O, " #     #");
@@ -600,9 +620,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_O <- Concatenar(sprite_O, " #     #");
 	sprite_O <- Concatenar(sprite_O, "  ##### ");
 	sprite_O <- Concatenar(sprite_O, "        ");
-
 	
-	// Sprite P
+	
+
 	sprite_P <- "";
 	sprite_P <- Concatenar(sprite_P, " ###### ");
 	sprite_P <- Concatenar(sprite_P, " #     #");
@@ -612,9 +632,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_P <- Concatenar(sprite_P, " #      ");
 	sprite_P <- Concatenar(sprite_P, " #      ");
 	sprite_P <- Concatenar(sprite_P, "        ");
-
 	
-	// Sprite Q
+	
+
 	sprite_Q <- "";
 	sprite_Q <- Concatenar(sprite_Q, "  ##### ");
 	sprite_Q <- Concatenar(sprite_Q, " #     #");
@@ -624,9 +644,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_Q <- Concatenar(sprite_Q, " #    # ");
 	sprite_Q <- Concatenar(sprite_Q, "  #### #");
 	sprite_Q <- Concatenar(sprite_Q, "        ");
-
 	
-	// Sprite R
+	
+
 	sprite_R <- "";
 	sprite_R <- Concatenar(sprite_R, " ###### ");
 	sprite_R <- Concatenar(sprite_R, " #     #");
@@ -636,9 +656,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_R <- Concatenar(sprite_R, " #    # ");
 	sprite_R <- Concatenar(sprite_R, " #     #");
 	sprite_R <- Concatenar(sprite_R, "        ");
-
 	
-	// Sprite S
+	
+
 	sprite_S <- "";
 	sprite_S <- Concatenar(sprite_S, "  ##### ");
 	sprite_S <- Concatenar(sprite_S, " #     #");
@@ -648,9 +668,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_S <- Concatenar(sprite_S, " #     #");
 	sprite_S <- Concatenar(sprite_S, "  ##### ");
 	sprite_S <- Concatenar(sprite_S, "        ");
-
 	
-	// Sprite T
+	
+
 	sprite_T <- "";
 	sprite_T <- Concatenar(sprite_T, " #######");
 	sprite_T <- Concatenar(sprite_T, "    #   ");
@@ -660,9 +680,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_T <- Concatenar(sprite_T, "    #   ");
 	sprite_T <- Concatenar(sprite_T, "    #   ");
 	sprite_T <- Concatenar(sprite_T, "        ");
-
 	
-	// Sprite U
+	
+
 	sprite_U <- "";
 	sprite_U <- Concatenar(sprite_U, " #     #");
 	sprite_U <- Concatenar(sprite_U, " #     #");
@@ -672,9 +692,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_U <- Concatenar(sprite_U, " #     #");
 	sprite_U <- Concatenar(sprite_U, "  ##### ");
 	sprite_U <- Concatenar(sprite_U, "        ");
-
 	
-	// Sprite V
+	
+
 	sprite_V <- "";
 	sprite_V <- Concatenar(sprite_V, " #     #");
 	sprite_V <- Concatenar(sprite_V, " #     #");
@@ -684,9 +704,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_V <- Concatenar(sprite_V, "   # #  ");
 	sprite_V <- Concatenar(sprite_V, "    #   ");
 	sprite_V <- Concatenar(sprite_V, "        ");
-
 	
-	// Sprite W
+	
+
 	sprite_W <- "";
 	sprite_W <- Concatenar(sprite_W, " #     #");
 	sprite_W <- Concatenar(sprite_W, " #     #");
@@ -696,9 +716,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_W <- Concatenar(sprite_W, " #  #  #");
 	sprite_W <- Concatenar(sprite_W, "  ## ## ");
 	sprite_W <- Concatenar(sprite_W, "        ");
-
 	
-	// Sprite X
+	
+
 	sprite_X <- "";
 	sprite_X <- Concatenar(sprite_X, " #     #");
 	sprite_X <- Concatenar(sprite_X, "  #   # ");
@@ -708,9 +728,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_X <- Concatenar(sprite_X, "  #   # ");
 	sprite_X <- Concatenar(sprite_X, " #     #");
 	sprite_X <- Concatenar(sprite_X, "        ");
-
 	
-	// Sprite Y
+	
+
 	sprite_Y <- "";
 	sprite_Y <- Concatenar(sprite_Y, " #     #");
 	sprite_Y <- Concatenar(sprite_Y, "  #   # ");
@@ -720,9 +740,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_Y <- Concatenar(sprite_Y, "    #   ");
 	sprite_Y <- Concatenar(sprite_Y, "    #   ");
 	sprite_Y <- Concatenar(sprite_Y, "        ");
-
 	
-	// Sprite Z
+	
+
 	sprite_Z <- "";
 	sprite_Z <- Concatenar(sprite_Z, " #######");
 	sprite_Z <- Concatenar(sprite_Z, "      # ");
@@ -732,9 +752,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_Z <- Concatenar(sprite_Z, "  #     ");
 	sprite_Z <- Concatenar(sprite_Z, " #######");
 	sprite_Z <- Concatenar(sprite_Z, "        ");
-
 	
-	// Sprite +
+	
+
 	sprite_plus <- "";
 	sprite_plus <- Concatenar(sprite_plus, "    #   ");
 	sprite_plus <- Concatenar(sprite_plus, "    #   ");
@@ -744,9 +764,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_plus <- Concatenar(sprite_plus, "    #   ");
 	sprite_plus <- Concatenar(sprite_plus, "    #   ");
 	sprite_plus <- Concatenar(sprite_plus, "        ");
-
 	
-	// Sprite -
+	
+
 	sprite_minus <- "";
 	sprite_minus <- Concatenar(sprite_minus, "        ");
 	sprite_minus <- Concatenar(sprite_minus, "        ");
@@ -756,9 +776,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_minus <- Concatenar(sprite_minus, "        ");
 	sprite_minus <- Concatenar(sprite_minus, "        ");
 	sprite_minus <- Concatenar(sprite_minus, "        ");
-
 	
-	// Sprite /
+	
+
 	sprite_slash <- "";
 	sprite_slash <- Concatenar(sprite_slash, "      # ");
 	sprite_slash <- Concatenar(sprite_slash, "     #  ");
@@ -768,9 +788,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_slash <- Concatenar(sprite_slash, " #      ");
 	sprite_slash <- Concatenar(sprite_slash, "#       ");
 	sprite_slash <- Concatenar(sprite_slash, "        ");
-
 	
-	// Sprite ,
+	
+
 	sprite_comma <- "";
 	sprite_comma <- Concatenar(sprite_comma, "        ");
 	sprite_comma <- Concatenar(sprite_comma, "        ");
@@ -780,9 +800,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_comma <- Concatenar(sprite_comma, "   ##   ");
 	sprite_comma <- Concatenar(sprite_comma, "    #   ");
 	sprite_comma <- Concatenar(sprite_comma, "   #    ");
-
 	
-	// Sprite .
+	
+
 	sprite_dot <- "";
 	sprite_dot <- Concatenar(sprite_dot, "        ");
 	sprite_dot <- Concatenar(sprite_dot, "        ");
@@ -792,9 +812,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_dot <- Concatenar(sprite_dot, "        ");
 	sprite_dot <- Concatenar(sprite_dot, "   ##   ");
 	sprite_dot <- Concatenar(sprite_dot, "   ##   ");
-
 	
-	// Sprite :
+	
+
 	sprite_colon <- "";
 	sprite_colon <- Concatenar(sprite_colon, "        ");
 	sprite_colon <- Concatenar(sprite_colon, "   ##   ");
@@ -804,9 +824,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_colon <- Concatenar(sprite_colon, "   ##   ");
 	sprite_colon <- Concatenar(sprite_colon, "   ##   ");
 	sprite_colon <- Concatenar(sprite_colon, "        ");
-
 	
-	// Sprite ?
+	
+
 	sprite_question <- "";
 	sprite_question <- Concatenar(sprite_question, "  ##### ");
 	sprite_question <- Concatenar(sprite_question, " #     #");
@@ -816,9 +836,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_question <- Concatenar(sprite_question, "        ");
 	sprite_question <- Concatenar(sprite_question, "    #   ");
 	sprite_question <- Concatenar(sprite_question, "        ");
-
 	
-	// Sprite !
+	
+
 	sprite_exclam <- "";
 	sprite_exclam <- Concatenar(sprite_exclam, "    #   ");
 	sprite_exclam <- Concatenar(sprite_exclam, "    #   ");
@@ -828,9 +848,9 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_exclam <- Concatenar(sprite_exclam, "        ");
 	sprite_exclam <- Concatenar(sprite_exclam, "    #   ");
 	sprite_exclam <- Concatenar(sprite_exclam, "        ");
-
 	
-	// Sprite <3 (corazón)
+	
+
 	sprite_heart <- "";
 	sprite_heart <- Concatenar(sprite_heart, "  ##  ##");
 	sprite_heart <- Concatenar(sprite_heart, " #######");
@@ -840,7 +860,106 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
 	sprite_heart <- Concatenar(sprite_heart, "   ###  ");
 	sprite_heart <- Concatenar(sprite_heart, "    #   ");
 	sprite_heart <- Concatenar(sprite_heart, "        ");
-
+	
+	sprite_0 <- "";
+	sprite_0 <- Concatenar(sprite_0, "  ##### ");
+	sprite_0 <- Concatenar(sprite_0, " #     #");
+	sprite_0 <- Concatenar(sprite_0, " #    ##");
+	sprite_0 <- Concatenar(sprite_0, " #   # #");
+	sprite_0 <- Concatenar(sprite_0, " #  #  #");
+	sprite_0 <- Concatenar(sprite_0, " # #   #");
+	sprite_0 <- Concatenar(sprite_0, " #     #");
+	sprite_0 <- Concatenar(sprite_0, "  ##### ");
+	
+	sprite_1 <- "";
+	sprite_1 <- Concatenar(sprite_1, "   ##   ");
+	sprite_1 <- Concatenar(sprite_1, "  ###   ");
+	sprite_1 <- Concatenar(sprite_1, " # ##   ");
+	sprite_1 <- Concatenar(sprite_1, "   ##   ");
+	sprite_1 <- Concatenar(sprite_1, "   ##   ");
+	sprite_1 <- Concatenar(sprite_1, "   ##   ");
+	sprite_1 <- Concatenar(sprite_1, "   ##   ");
+	sprite_1 <- Concatenar(sprite_1, " ###### ");
+	
+	sprite_2 <- "";
+	sprite_2 <- Concatenar(sprite_2, "  ##### ");
+	sprite_2 <- Concatenar(sprite_2, " #     #");
+	sprite_2 <- Concatenar(sprite_2, "       #");
+	sprite_2 <- Concatenar(sprite_2, "      # ");
+	sprite_2 <- Concatenar(sprite_2, "    ##  ");
+	sprite_2 <- Concatenar(sprite_2, "  ##    ");
+	sprite_2 <- Concatenar(sprite_2, " #      ");
+	sprite_2 <- Concatenar(sprite_2, " #######");
+	
+	sprite_3 <- "";
+	sprite_3 <- Concatenar(sprite_3, "  ##### ");
+	sprite_3 <- Concatenar(sprite_3, " #     #");
+	sprite_3 <- Concatenar(sprite_3, "       #");
+	sprite_3 <- Concatenar(sprite_3, "   #### ");
+	sprite_3 <- Concatenar(sprite_3, "       #");
+	sprite_3 <- Concatenar(sprite_3, "       #");
+	sprite_3 <- Concatenar(sprite_3, " #     #");
+	sprite_3 <- Concatenar(sprite_3, "  ##### ");
+	
+	sprite_4 <- "";
+	sprite_4 <- Concatenar(sprite_4, "    ##  ");
+	sprite_4 <- Concatenar(sprite_4, "   # #  ");
+	sprite_4 <- Concatenar(sprite_4, "  #  #  ");
+	sprite_4 <- Concatenar(sprite_4, " #   #  ");
+	sprite_4 <- Concatenar(sprite_4, "#    #  ");
+	sprite_4 <- Concatenar(sprite_4, "####### ");
+	sprite_4 <- Concatenar(sprite_4, "     #  ");
+	sprite_4 <- Concatenar(sprite_4, "     #  ");
+	
+	sprite_5 <- "";
+	sprite_5 <- Concatenar(sprite_5, " #######");
+	sprite_5 <- Concatenar(sprite_5, " #      ");
+	sprite_5 <- Concatenar(sprite_5, " #      ");
+	sprite_5 <- Concatenar(sprite_5, " #####  ");
+	sprite_5 <- Concatenar(sprite_5, "      # ");
+	sprite_5 <- Concatenar(sprite_5, "      # ");
+	sprite_5 <- Concatenar(sprite_5, " #    # ");
+	sprite_5 <- Concatenar(sprite_5, "  ####  ");
+	
+	sprite_6 <- "";
+	sprite_6 <- Concatenar(sprite_6, "  ##### ");
+	sprite_6 <- Concatenar(sprite_6, " #     #");
+	sprite_6 <- Concatenar(sprite_6, " #      ");
+	sprite_6 <- Concatenar(sprite_6, " ###### ");
+	sprite_6 <- Concatenar(sprite_6, " #     #");
+	sprite_6 <- Concatenar(sprite_6, " #     #");
+	sprite_6 <- Concatenar(sprite_6, " #     #");
+	sprite_6 <- Concatenar(sprite_6, "  ##### ");
+	
+	sprite_7 <- "";
+	sprite_7 <- Concatenar(sprite_7, " #######");
+	sprite_7 <- Concatenar(sprite_7, "      # ");
+	sprite_7 <- Concatenar(sprite_7, "     #  ");
+	sprite_7 <- Concatenar(sprite_7, "    #   ");
+	sprite_7 <- Concatenar(sprite_7, "   #    ");
+	sprite_7 <- Concatenar(sprite_7, "  #     ");
+	sprite_7 <- Concatenar(sprite_7, " #      ");
+	sprite_7 <- Concatenar(sprite_7, "#       ");
+	
+	sprite_8 <- "";
+	sprite_8 <- Concatenar(sprite_8, "  ##### ");
+	sprite_8 <- Concatenar(sprite_8, " #     #");
+	sprite_8 <- Concatenar(sprite_8, " #     #");
+	sprite_8 <- Concatenar(sprite_8, "  ##### ");
+	sprite_8 <- Concatenar(sprite_8, " #     #");
+	sprite_8 <- Concatenar(sprite_8, " #     #");
+	sprite_8 <- Concatenar(sprite_8, " #     #");
+	sprite_8 <- Concatenar(sprite_8, "  ##### ");
+	
+	sprite_9 <- "";
+	sprite_9 <- Concatenar(sprite_9, "  ##### ");
+	sprite_9 <- Concatenar(sprite_9, " #     #");
+	sprite_9 <- Concatenar(sprite_9, " #     #");
+	sprite_9 <- Concatenar(sprite_9, " #     #");
+	sprite_9 <- Concatenar(sprite_9, "  ######");
+	sprite_9 <- Concatenar(sprite_9, "       #");
+	sprite_9 <- Concatenar(sprite_9, " #     #");
+	sprite_9 <- Concatenar(sprite_9, "  ##### ");
 	
 	
 	
@@ -853,7 +972,7 @@ SubProceso obtener_sprite(letra, sprite_resultado Por Referencia)
     sprite_DEF <- Concatenar(sprite_DEF, "         ");
     sprite_DEF <- Concatenar(sprite_DEF, "         ");
     sprite_DEF <- Concatenar(sprite_DEF, "         ");
-
+	
 	
 	
 	
@@ -969,21 +1088,19 @@ FinSubProceso
 
 
 
-SubProceso imprimir_texto_con_sprites(Screen Por Referencia, texto, pos_x_inicial, pos_y)
+SubProceso print_sprite(Screen Por Referencia, texto_a_imprimir, pos_x_inicial, pos_y)
     Definir i, j, desplazamiento_x Como Entero;
     Definir letra_actual Como Caracter;
     Definir sprite_temp Como Caracter;
 	
     desplazamiento_x <- 0;
 	
-    Para i <- 0 Hasta Longitud(texto) - 1
-        letra_actual <- SubCadena(texto, i, i);
-        obtener_sprite(letra_actual, sprite_temp);
-        dibujar_sprite_str(Screen, sprite_temp, pos_x_inicial + desplazamiento_x, pos_y);
+    Para i <- 0 Hasta Longitud(texto_a_imprimir) - 1
+        letra_actual <- SubCadena(texto_a_imprimir, i, i);
+        get_sprite(letra_actual, sprite_temp);
+        draw_sprite_str(Screen, sprite_temp, pos_x_inicial + desplazamiento_x, pos_y);
         desplazamiento_x <- desplazamiento_x + 9; // Para que no se sobrepongan
     FinPara
 FinSubProceso
-
-
 
 
